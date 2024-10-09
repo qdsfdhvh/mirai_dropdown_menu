@@ -73,6 +73,9 @@ class MiraiDropDownMenu<T> extends StatefulWidget {
     this.otherMargin,
     this.animationDuration,
     this.searchNoDataWidget,
+
+    /// Dialog
+    this.dialogBarrierColor,
   }) : assert(child.key != null);
 
   /// Child widget that has dropdown menu
@@ -142,6 +145,8 @@ class MiraiDropDownMenu<T> extends StatefulWidget {
   final Duration? animationDuration;
   final Widget? searchNoDataWidget;
 
+  final Color? dialogBarrierColor;
+
   @override
   MiraiDropDownMenuState<T> createState() => MiraiDropDownMenuState<T>();
 }
@@ -178,9 +183,11 @@ class MiraiDropDownMenuState<T> extends State<MiraiDropDownMenu<T>> {
     Offset position = renderBox.localToGlobal(Offset.zero);
 
     if (widget.children.isNotEmpty) {
-      showCupertinoDialog<void>(
+      showDialog<void>(
         context: context,
         barrierDismissible: false,
+        barrierColor: widget.dialogBarrierColor,
+        useSafeArea: false,
         builder: (_) {
           return _DropDownMenuContent<T>(
             maxHeight: widget.maxHeight,
