@@ -2,7 +2,6 @@
 * Created By Mirai Devs.
 * On 3/28/2022.
 */
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mirai_dropdown_menu/src/models/search_attributes_model.dart';
 import 'package:mirai_dropdown_menu/src/utils/extensions.dart';
@@ -45,6 +44,7 @@ class MiraiDropDownMenu<T> extends StatefulWidget {
     this.enable = true,
     this.showSeparator = true,
     this.listThumbVisibility = true,
+    this.scrollBarVisibility = true,
     this.showOtherAndItsTextField = false,
     this.onOtherChanged,
     this.exit = MiraiExit.fromAll,
@@ -133,6 +133,7 @@ class MiraiDropDownMenu<T> extends StatefulWidget {
 
   final Color? separatorColor;
   final bool listThumbVisibility;
+  final bool scrollBarVisibility;
 
   /// Other
   final TextEditingController? otherController;
@@ -222,6 +223,7 @@ class MiraiDropDownMenuState<T> extends State<MiraiDropDownMenu<T>> {
             itemHeight: widget.itemHeight,
             separatorColor: widget.separatorColor,
             listThumbVisibility: widget.listThumbVisibility,
+            scrollBarVisibility: widget.scrollBarVisibility,
 
             /// Other
             onOtherChanged: widget.onOtherChanged,
@@ -297,6 +299,7 @@ class _DropDownMenuContent<T> extends StatefulWidget {
     required this.itemHeight,
     required this.separatorColor,
     required this.listThumbVisibility,
+    required this.scrollBarVisibility,
     required this.animationDuration,
     required this.searchNoDataWidget,
   });
@@ -314,6 +317,7 @@ class _DropDownMenuContent<T> extends StatefulWidget {
   final double? radius;
   final bool showOtherAndItsTextField;
   final bool listThumbVisibility;
+  final bool scrollBarVisibility;
   final bool showSeparator;
   final ValueChanged<String>? onOtherChanged;
   final MiraiExit exit;
@@ -545,10 +549,8 @@ class _DropDownMenuContentState<T> extends State<_DropDownMenuContent<T>>
                                   (widget.showOtherAndItsTextField ? 1 : 0) +
                                   (widget.showSearchTextField ? 1 : 0);
 
-                              return Scrollbar(
-                                thumbVisibility: widget.listThumbVisibility,
-                                controller: _scrollController,
-                                radius: const Radius.circular(20),
+                              return _scrollBarWrapper(
+                                enabled: widget.scrollBarVisibility,
                                 child: ListView.separated(
                                   controller: _scrollController,
                                   shrinkWrap: true,
@@ -855,6 +857,19 @@ class _DropDownMenuContentState<T> extends State<_DropDownMenuContent<T>>
         ),
       ),
     );
+  }
+
+  Widget _scrollBarWrapper({
+    required bool enabled,
+    required Widget child,
+}) {
+    return enabled
+        ? Scrollbar(
+        thumbVisibility: widget.listThumbVisibility,
+        controller: _scrollController,
+        radius: const Radius.circular(20),
+        child: child)
+        : child;
   }
 
   void onTapOtherTextField(bool isKeyboardVisible, ScrollController scrollController) {
